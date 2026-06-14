@@ -6,9 +6,8 @@ The web dashboard is built with React, Vite, Tailwind CSS, shadcn/ui, and lucide
 
 | page | screenshot |
 |:------:|:----------:|
-| Home | <img width="992" height="858" alt="image" src="https://github.com/user-attachments/assets/710f64b3-b860-49f4-9f1d-5e213563ba7d" /> |
-| Detail Top | <img width="994" height="904" alt="image" src="https://github.com/user-attachments/assets/0eaf5835-e1d9-4e4a-bedd-1ed1e29e26f0" /> | 
-| Country/Region Price Rank | <img width="998" height="921" alt="image" src="https://github.com/user-attachments/assets/5463c39e-99db-4987-a85c-2a1b326a086e" /> | 
+| Home | <img width="1251" height="862" alt="image" src="https://github.com/user-attachments/assets/c6168c67-b184-432f-88f4-270d7a45c981" /> |
+| Detail | <img width="1243" height="879" alt="image" src="https://github.com/user-attachments/assets/96ba9ee8-4848-4886-97a8-9e094b245144" /> | 
 
 ## Features
 
