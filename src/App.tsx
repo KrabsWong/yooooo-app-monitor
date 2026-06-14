@@ -192,8 +192,8 @@ export default function App() {
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
-        <header className="flex flex-col gap-4 border-b pb-5 md:flex-row md:items-end md:justify-between">
-          <div className="flex min-w-0 flex-col gap-2">
+        <header className="relative flex flex-col gap-4 border-b pb-5 md:flex-row md:items-end md:justify-between">
+          <div className="flex min-w-0 flex-col gap-2 pr-32 md:pr-0">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <StoreIcon className="size-4" />
               <span>App Store Price Monitor</span>
@@ -214,7 +214,7 @@ export default function App() {
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="absolute right-0 top-0 flex items-center gap-2 md:static">
             <ThemeToggle />
           </div>
         </header>
@@ -573,7 +573,12 @@ function AppDetailLoading({
           </div>
           <CardAction className="col-start-1 row-span-1 row-start-auto mt-3 flex w-full flex-col items-stretch gap-2 justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:mt-0 sm:w-auto sm:flex-row sm:items-center sm:justify-self-end">
             {appStoreUrl ? (
-              <AppStoreButton appId={app.appId} appName={app.name} className="w-full sm:w-auto" country={app.country} />
+              <AppStoreButton
+                appId={app.appId}
+                appName={app.name}
+                className="h-12 w-full text-base sm:h-7 sm:w-auto sm:text-[0.8rem]"
+                country={app.country}
+              />
             ) : null}
             <Badge className="w-fit" variant="secondary">
               {refreshing ? "Loading prices" : "Pricing on demand"}
@@ -669,12 +674,18 @@ function TargetPanel({
             <AppStoreButton
               appId={target.appId}
               appName={target.name}
-              className="w-full sm:w-auto"
+              className="h-12 w-full text-base sm:h-7 sm:w-auto sm:text-[0.8rem]"
               country={storeCountry}
             />
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="w-full sm:w-auto" disabled={refreshing} onClick={onRefresh} size="sm" variant="outline">
+                <Button
+                  className="h-12 w-full text-base sm:h-7 sm:w-auto sm:text-[0.8rem]"
+                  disabled={refreshing}
+                  onClick={onRefresh}
+                  size="sm"
+                  variant="outline"
+                >
                   {refreshing ? <Spinner data-icon="inline-start" /> : <RefreshCwIcon data-icon="inline-start" />}
                   Refresh
                 </Button>
@@ -742,7 +753,7 @@ function OfferSelect({
 }) {
   return (
     <Select value={activeOfferKey} onValueChange={onChange}>
-      <SelectTrigger className="h-10 w-full">
+      <SelectTrigger className="w-full text-base data-[size=default]:h-12 sm:text-sm sm:data-[size=default]:h-10">
         <SelectValue placeholder="Select an offer" />
       </SelectTrigger>
       <SelectContent align="end" className="max-h-[24rem] sm:min-w-[420px]" position="popper">

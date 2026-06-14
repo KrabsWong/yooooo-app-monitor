@@ -17,7 +17,10 @@ export function ThemeToggle() {
 
   return (
     <Select value={theme} onValueChange={(value) => setTheme(value as Theme)}>
-      <SelectTrigger aria-label={`Theme: ${label}`} className="h-9 w-[132px]">
+      <SelectTrigger
+        aria-label={`Theme: ${label}`}
+        className="w-[116px] text-sm data-[size=default]:h-9 sm:w-[132px]"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent align="end" position="popper">
