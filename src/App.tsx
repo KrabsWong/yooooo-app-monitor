@@ -350,7 +350,6 @@ function AppDirectory({
           <AppDirectoryCard
             key={app.appId}
             app={app}
-            baseCurrency={appList.baseCurrency}
             loadedTarget={targetSnapshots[app.appId] || null}
             refreshing={refreshingTarget === app.appId}
             onOpen={() => onOpenTarget(app.appId)}
@@ -364,21 +363,17 @@ function AppDirectory({
 
 function AppDirectoryCard({
   app,
-  baseCurrency,
   loadedTarget,
   refreshing,
   onOpen,
   onRefresh
 }: {
   app: AppSummary;
-  baseCurrency: string;
   loadedTarget: TargetSnapshot | null;
   refreshing: boolean;
   onOpen: () => void;
   onRefresh: () => void;
 }) {
-  const lowestPrice = loadedTarget ? findLowestTargetPrice(loadedTarget) : null;
-
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -432,9 +427,6 @@ function AppDirectoryCard({
           <>
             <Badge variant="secondary">{formatOfferCount(getComparableOffers(loadedTarget).length)}</Badge>
             <Badge variant="outline">{loadedTarget.countryCount} regions</Badge>
-            <span className="font-medium text-foreground">
-              Lowest {lowestPrice ? formatMoney(lowestPrice.priceInBase, baseCurrency) : "-"}
-            </span>
           </>
         ) : (
           <>
@@ -807,7 +799,11 @@ function OfferCard({
                 <ArrowDownIcon className="size-4" />
                 <span>Lowest converted price</span>
               </div>
-              {savingsPercent ? <Badge variant="secondary">Save {savingsPercent}</Badge> : null}
+              {savingsPercent ? (
+                <Badge className="bg-price-low text-price-low-foreground" variant="default">
+                  Save {savingsPercent}
+                </Badge>
+              ) : null}
             </div>
             <div className="flex flex-col gap-1">
               <div className="truncate text-3xl font-semibold tracking-normal">
@@ -884,7 +880,7 @@ function LocalPriceValue({ price }: { price: CountryPrice }) {
   return (
     <div className="flex min-w-0 flex-wrap items-center gap-1.5">
       {marker ? (
-        <Badge variant="default" className="font-mono tracking-normal">
+        <Badge variant="outline" className="font-mono tracking-normal">
           {marker}
         </Badge>
       ) : null}
@@ -946,15 +942,6 @@ function findHighestPrice(prices: CountryPrice[]) {
     }
   }
   return null;
-}
-
-function findLowestTargetPrice(target: TargetSnapshot) {
-  return (
-    getComparableOffers(target)
-      .flatMap((offer) => offer.prices)
-      .filter((price) => Number.isFinite(price.priceInBase))
-      .sort((first, second) => Number(first.priceInBase) - Number(second.priceInBase))[0] || null
-  );
 }
 
 function formatCountryLabel(price: CountryPrice | null) {

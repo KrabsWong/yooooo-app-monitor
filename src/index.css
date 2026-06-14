@@ -29,6 +29,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-price-low: var(--price-low);
+  --color-price-low-foreground: var(--price-low-foreground);
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
@@ -69,6 +71,8 @@
   --chart-3: oklch(0.55 0 0);
   --chart-4: oklch(0.7 0 0);
   --chart-5: oklch(0.85 0 0);
+  --price-low: oklch(0.48 0.14 150);
+  --price-low-foreground: oklch(0.99 0.02 150);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.145 0 0);
@@ -109,6 +113,8 @@
   --chart-3: oklch(0.64 0 0);
   --chart-4: oklch(0.5 0 0);
   --chart-5: oklch(0.36 0 0);
+  --price-low: oklch(0.72 0.16 150);
+  --price-low-foreground: oklch(0.12 0.04 150);
   --sidebar: oklch(0.18 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.985 0 0);
