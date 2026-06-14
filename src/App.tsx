@@ -443,11 +443,13 @@ function AppDirectoryCard({
 function AppStoreButton({
   appId,
   appName,
+  className,
   country,
   compact = false
 }: {
   appId: string;
   appName: string;
+  className?: string;
   country?: string | null;
   compact?: boolean;
 }) {
@@ -462,7 +464,7 @@ function AppStoreButton({
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button asChild size="icon-sm" variant="outline">
+          <Button asChild className={className} size="icon-sm" variant="outline">
             <a
               aria-label={label}
               href={appStoreUrl}
@@ -481,7 +483,7 @@ function AppStoreButton({
   }
 
   return (
-    <Button asChild size="sm" variant="outline">
+    <Button asChild className={className} size="sm" variant="outline">
       <a
         aria-label={label}
         href={appStoreUrl}
@@ -517,13 +519,13 @@ function AppDetailPage({
   onRefreshTarget: (appId: string) => void;
 }) {
   return (
-    <section className="flex flex-col gap-5">
+    <section className="flex flex-col gap-4 sm:gap-5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <Button onClick={onBack} variant="ghost" className="w-fit">
           <ArrowLeftIcon data-icon="inline-start" />
           Apps
         </Button>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-xs text-muted-foreground sm:text-sm">
           {exchangeUpdatedAt
             ? `Exchange updated ${formatDateTime(exchangeUpdatedAt)}`
             : `Prices loaded ${formatDateTime(generatedAt)}`}
@@ -557,23 +559,25 @@ function AppDetailLoading({
         <ArrowLeftIcon data-icon="inline-start" />
         Apps
       </Button>
-      <Card>
-        <CardHeader>
-          <div className="flex min-w-0 items-center gap-3">
+      <Card className="[--card-spacing:--spacing(3)] sm:[--card-spacing:--spacing(4)]">
+        <CardHeader className="has-data-[slot=card-action]:grid-cols-1 sm:has-data-[slot=card-action]:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="flex min-w-0 items-start gap-3">
             <AppIcon name={app.name} iconUrl={app.iconUrl} size="lg" />
             <div className="flex min-w-0 flex-col gap-1">
               <CardTitle className="flex flex-wrap items-center gap-2">
-                <span>{app.name}</span>
+                <span className="min-w-0 truncate">{app.name}</span>
                 <Badge variant="outline">{app.platform}</Badge>
               </CardTitle>
               <CardDescription className="line-clamp-2 max-w-3xl">{app.description || `App ID ${app.appId}`}</CardDescription>
             </div>
           </div>
-          <CardAction className="flex items-center gap-2">
+          <CardAction className="col-start-1 row-span-1 row-start-auto mt-3 flex w-full flex-col items-stretch gap-2 justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:mt-0 sm:w-auto sm:flex-row sm:items-center sm:justify-self-end">
             {appStoreUrl ? (
-              <AppStoreButton appId={app.appId} appName={app.name} country={app.country} />
+              <AppStoreButton appId={app.appId} appName={app.name} className="w-full sm:w-auto" country={app.country} />
             ) : null}
-            <Badge variant="secondary">{refreshing ? "Loading prices" : "Pricing on demand"}</Badge>
+            <Badge className="w-fit" variant="secondary">
+              {refreshing ? "Loading prices" : "Pricing on demand"}
+            </Badge>
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
@@ -642,13 +646,13 @@ function TargetPanel({
 
   return (
     <section className="flex flex-col gap-5">
-      <Card>
-        <CardHeader>
-          <div className="flex min-w-0 items-center gap-3">
+      <Card className="[--card-spacing:--spacing(3)] sm:[--card-spacing:--spacing(4)]">
+        <CardHeader className="has-data-[slot=card-action]:grid-cols-1 sm:has-data-[slot=card-action]:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="flex min-w-0 items-start gap-3">
             <AppIcon name={target.name} iconUrl={target.iconUrl} size="lg" />
             <div className="flex min-w-0 flex-col gap-1">
               <CardTitle className="flex flex-wrap items-center gap-2">
-                <span>{target.name}</span>
+                <span className="min-w-0 truncate">{target.name}</span>
                 <Badge variant="outline">{target.platform}</Badge>
               </CardTitle>
               <CardDescription>
@@ -660,12 +664,17 @@ function TargetPanel({
               ) : null}
             </div>
           </div>
-          <CardAction className="flex items-center gap-2">
-            <Badge variant="secondary">{formatOfferCount(offers.length)}</Badge>
-            <AppStoreButton appId={target.appId} appName={target.name} country={storeCountry} />
+          <CardAction className="col-start-1 row-span-1 row-start-auto mt-3 flex w-full flex-col items-stretch gap-2 justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:mt-0 sm:w-auto sm:flex-row sm:items-center sm:justify-self-end">
+            <Badge className="w-fit" variant="secondary">{formatOfferCount(offers.length)}</Badge>
+            <AppStoreButton
+              appId={target.appId}
+              appName={target.name}
+              className="w-full sm:w-auto"
+              country={storeCountry}
+            />
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button disabled={refreshing} onClick={onRefresh} size="sm" variant="outline">
+                <Button className="w-full sm:w-auto" disabled={refreshing} onClick={onRefresh} size="sm" variant="outline">
                   {refreshing ? <Spinner data-icon="inline-start" /> : <RefreshCwIcon data-icon="inline-start" />}
                   Refresh
                 </Button>
@@ -773,16 +782,16 @@ function OfferCard({
   const savingsPercent = formatSavingsPercent(offer.stats);
 
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <Card className="[--card-spacing:--spacing(3)] sm:[--card-spacing:--spacing(4)]">
+      <CardHeader className="gap-3 has-data-[slot=card-action]:grid-cols-1 sm:has-data-[slot=card-action]:grid-cols-[minmax(0,1fr)_minmax(16rem,26rem)]">
         <div className="flex min-w-0 flex-col gap-1">
-          <CardTitle className="flex flex-wrap items-center gap-2">
-            <span>{offer.name}</span>
+          <CardTitle className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="min-w-0 truncate">{offer.name}</span>
             <Badge variant="outline">{formatOfferKind(offer)}</Badge>
           </CardTitle>
           <CardDescription>Compare country / region prices for the selected plan.</CardDescription>
         </div>
-        <CardAction className="w-full sm:w-[420px]">
+        <CardAction className="col-start-1 row-span-1 row-start-auto w-full justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:w-full sm:justify-self-end">
           <OfferSelect
             activeOfferKey={activeOfferKey}
             baseCurrency={baseCurrency}
@@ -791,9 +800,9 @@ function OfferCard({
           />
         </CardAction>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-3 sm:gap-4">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,2fr)]">
-          <div className="flex min-h-40 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground">
+          <div className="flex min-h-36 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground sm:min-h-40">
             <div className="flex items-center justify-between gap-3 text-sm">
               <div className="flex items-center gap-2">
                 <ArrowDownIcon className="size-4" />
@@ -814,7 +823,7 @@ function OfferCard({
               </div>
             </div>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-3 gap-2">
             <StatBlock
               icon={GaugeIcon}
               label="Median"
@@ -836,41 +845,71 @@ function OfferCard({
           </div>
         </div>
         <Separator />
-        <ScrollArea className="h-[460px] max-h-[65vh] rounded-lg border">
-          <Table>
-            <TableHeader className="sticky top-0 bg-background">
-              <TableRow>
-                <TableHead className="w-16">Rank</TableHead>
-                <TableHead>Country / Region</TableHead>
-                <TableHead>Local price</TableHead>
-                <TableHead className="text-right">{baseCurrency}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {offer.prices.map((price, index) => (
-                <TableRow key={`${offer.key}:${price.country}`} className={cn(index === 0 && "bg-muted/30")}>
-                  <TableCell>
-                    <Badge variant={index === 0 ? "default" : "secondary"}>#{index + 1}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <RegionFlag country={price.country} />
-                      <span className="font-medium">{formatCountryLabel(price)}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <LocalPriceValue price={price} />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    {formatMoney(price.priceInBase, baseCurrency)}
-                  </TableCell>
+        <ScrollArea className="h-[520px] max-h-[72vh] rounded-lg border md:h-[460px] md:max-h-[65vh]">
+          <MobilePriceList baseCurrency={baseCurrency} offer={offer} />
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader className="sticky top-0 bg-background">
+                <TableRow>
+                  <TableHead className="w-16">Rank</TableHead>
+                  <TableHead>Country / Region</TableHead>
+                  <TableHead>Local price</TableHead>
+                  <TableHead className="text-right">{baseCurrency}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {offer.prices.map((price, index) => (
+                  <TableRow key={`${offer.key}:${price.country}`} className={cn(index === 0 && "bg-muted/30")}>
+                    <TableCell>
+                      <Badge variant={index === 0 ? "default" : "secondary"}>#{index + 1}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <RegionFlag country={price.country} />
+                        <span className="font-medium">{formatCountryLabel(price)}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <LocalPriceValue price={price} />
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {formatMoney(price.priceInBase, baseCurrency)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </ScrollArea>
       </CardContent>
     </Card>
+  );
+}
+
+function MobilePriceList({ baseCurrency, offer }: { baseCurrency: string; offer: ProductComparison }) {
+  return (
+    <div className="flex flex-col divide-y md:hidden">
+      {offer.prices.map((price, index) => (
+        <div key={`${offer.key}:mobile:${price.country}`} className={cn("flex flex-col gap-3 p-3", index === 0 && "bg-muted/30")}>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <Badge className="shrink-0" variant={index === 0 ? "default" : "secondary"}>
+                #{index + 1}
+              </Badge>
+              <RegionFlag country={price.country} />
+              <span className="min-w-0 truncate font-medium">{formatCountryLabel(price)}</span>
+            </div>
+            <div className="shrink-0 text-right font-semibold tracking-normal">
+              {formatMoney(price.priceInBase, baseCurrency)}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <span className="shrink-0 text-muted-foreground">Local price</span>
+            <LocalPriceValue price={price} />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -918,13 +957,13 @@ function StatBlock({
   detail: string;
 }) {
   return (
-    <div className="flex min-h-32 flex-col justify-between rounded-lg border bg-muted/30 p-3">
+    <div className="flex min-h-24 flex-col justify-between rounded-lg border bg-muted/30 p-2 sm:min-h-32 sm:p-3">
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <Icon className="size-3" />
         <span>{label}</span>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="truncate text-lg font-semibold tracking-normal">{value}</div>
+        <div className="truncate text-sm font-semibold tracking-normal sm:text-lg">{value}</div>
         <div className="truncate text-xs text-muted-foreground">{detail}</div>
       </div>
     </div>
