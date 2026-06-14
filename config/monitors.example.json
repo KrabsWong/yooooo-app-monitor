@@ -1,0 +1,310 @@
+{
+  "baseCurrency": "CNY",
+  "concurrency": 4,
+  "targets": [
+    {
+      "name": "ChatGPT",
+      "platform": "ios",
+      "appId": "6448311069",
+      "countries": "all"
+    },
+    {
+      "name": "Claude by Anthropic",
+      "platform": "ios",
+      "appId": "6473753684",
+      "countries": "all"
+    },
+    {
+      "name": "Google Gemini",
+      "platform": "ios",
+      "appId": "6477489729",
+      "countries": "all"
+    },
+    {
+      "name": "iCloud",
+      "platform": "ios",
+      "appId": "icloud",
+      "source": "appstoreprice",
+      "countries": "all"
+    },
+    {
+      "name": "Grok - AI Chat & Video",
+      "platform": "ios",
+      "appId": "6670324846",
+      "countries": "all"
+    },
+    {
+      "name": "Shadowrocket",
+      "platform": "ios",
+      "appId": "932747118",
+      "countries": "all"
+    },
+    {
+      "name": "Telegram Messenger",
+      "platform": "ios",
+      "appId": "686449807",
+      "countries": "all"
+    },
+    {
+      "name": "WeChat",
+      "platform": "ios",
+      "appId": "414478124",
+      "countries": "all"
+    },
+    {
+      "name": "Netflix",
+      "platform": "ios",
+      "appId": "363590051",
+      "countries": "all"
+    },
+    {
+      "name": "YouTube",
+      "platform": "ios",
+      "appId": "544007664",
+      "countries": "all"
+    },
+    {
+      "name": "Apple Music",
+      "platform": "ios",
+      "appId": "applemusic",
+      "source": "appstoreprice",
+      "countries": "all"
+    },
+    {
+      "name": "Surge 5",
+      "platform": "ios",
+      "appId": "1442620678",
+      "countries": "all"
+    },
+    {
+      "name": "X",
+      "platform": "ios",
+      "appId": "333903271",
+      "countries": "all"
+    },
+    {
+      "name": "Spotify",
+      "platform": "ios",
+      "appId": "spotify",
+      "source": "appstoreprice",
+      "countries": "all"
+    },
+    {
+      "name": "Apple One",
+      "platform": "ios",
+      "appId": "appleone",
+      "source": "appstoreprice",
+      "countries": "all"
+    },
+    {
+      "name": "百度网盘",
+      "platform": "ios",
+      "appId": "547166701",
+      "countries": "all"
+    },
+    {
+      "name": "GitHub",
+      "platform": "ios",
+      "appId": "1477376905",
+      "countries": "all"
+    },
+    {
+      "name": "Google One",
+      "platform": "ios",
+      "appId": "1451784328",
+      "countries": "all"
+    },
+    {
+      "name": "Loon",
+      "platform": "ios",
+      "appId": "1373567447",
+      "countries": "all"
+    },
+    {
+      "name": "bilibili - All Your Fav Videos",
+      "platform": "ios",
+      "appId": "736536022",
+      "countries": "all"
+    },
+    {
+      "name": "Infuse",
+      "platform": "ios",
+      "appId": "1136220934",
+      "countries": "all"
+    },
+    {
+      "name": "Kimi - Kimi K2.6 is Live",
+      "platform": "ios",
+      "appId": "6474233312",
+      "countries": "all"
+    },
+    {
+      "name": "Telegram",
+      "platform": "ios",
+      "appId": "747648890",
+      "countries": "all"
+    },
+    {
+      "name": "1Password: Password Manager",
+      "platform": "ios",
+      "appId": "1511601750",
+      "countries": "all"
+    },
+    {
+      "name": "Duolingo: Language Lessons",
+      "platform": "ios",
+      "appId": "570060128",
+      "countries": "all"
+    },
+    {
+      "name": "Perplexity - AI Search & Chat",
+      "platform": "ios",
+      "appId": "1668000334",
+      "countries": "all"
+    },
+    {
+      "name": "Quantumult X",
+      "platform": "ios",
+      "appId": "1443988620",
+      "countries": "all"
+    },
+    {
+      "name": "Manus - AI Agent & Automation",
+      "platform": "ios",
+      "appId": "6740909540",
+      "countries": "all"
+    },
+    {
+      "name": "Termius - Modern SSH Client",
+      "platform": "ios",
+      "appId": "549039908",
+      "countries": "all"
+    },
+    {
+      "name": "SenPlayer - Media Player",
+      "platform": "ios",
+      "appId": "6443975850",
+      "countries": "all"
+    },
+    {
+      "name": "PikPak - Cloud Storage & Saver",
+      "platform": "ios",
+      "appId": "1616861537",
+      "countries": "all"
+    },
+    {
+      "name": "DeepSeek - AI Assistant",
+      "platform": "ios",
+      "appId": "6737597349",
+      "countries": "all"
+    },
+    {
+      "name": "熊猫吃短信2 - 垃圾短信拦截",
+      "platform": "ios",
+      "appId": "1642682818",
+      "countries": "all"
+    },
+    {
+      "name": "Notion: Notes, Tasks, AI",
+      "platform": "ios",
+      "appId": "1232780281",
+      "countries": "all"
+    },
+    {
+      "name": "微信读书",
+      "platform": "ios",
+      "appId": "952059546",
+      "countries": "all"
+    },
+    {
+      "name": "Genshin Impact",
+      "platform": "ios",
+      "appId": "1517783697",
+      "countries": "all"
+    },
+    {
+      "name": "QQ",
+      "platform": "ios",
+      "appId": "444934666",
+      "countries": "all"
+    },
+    {
+      "name": "Microsoft OneDrive",
+      "platform": "ios",
+      "appId": "477537958",
+      "countries": "all"
+    },
+    {
+      "name": "豆包 - 随时帮忙的 AI 助手",
+      "platform": "ios",
+      "appId": "6459478672",
+      "countries": "all"
+    },
+    {
+      "name": "Disney+",
+      "platform": "ios",
+      "appId": "1446075923",
+      "countries": "all"
+    },
+    {
+      "name": "Minecraft: Play with Friends!",
+      "platform": "ios",
+      "appId": "479516143",
+      "countries": "all"
+    },
+    {
+      "name": "Stash - Rule Based Proxy",
+      "platform": "ios",
+      "appId": "1596063349",
+      "countries": "all"
+    },
+    {
+      "name": "Discord - Talk, Play, Hang Out",
+      "platform": "ios",
+      "appId": "985746746",
+      "countries": "all"
+    },
+    {
+      "name": "StormCam",
+      "platform": "ios",
+      "appId": "6749835845",
+      "countries": "all"
+    },
+    {
+      "name": "快连VPN",
+      "platform": "ios",
+      "appId": "1471102783",
+      "countries": "all"
+    },
+    {
+      "name": "iQIYI - Dramas, Anime, Shows",
+      "platform": "ios",
+      "appId": "1461999674",
+      "countries": "all"
+    },
+    {
+      "name": "Goodnotes: AI Notes, Docs, PDF",
+      "platform": "ios",
+      "appId": "1444383602",
+      "countries": "all"
+    },
+    {
+      "name": "Forward - AI Media Hub",
+      "platform": "ios",
+      "appId": "6503940939",
+      "countries": "all"
+    },
+    {
+      "name": "Soul-年轻人的社交元宇宙",
+      "platform": "ios",
+      "appId": "1032287195",
+      "countries": "all"
+    },
+    {
+      "name": "VidHub -Video Library & Player",
+      "platform": "ios",
+      "appId": "1659622164",
+      "countries": "all"
+    }
+  ]
+}
