@@ -7,9 +7,9 @@ import {
   ArrowUpIcon,
   BadgeDollarSignIcon,
   ChevronRightIcon,
+  ExternalLinkIcon,
   GaugeIcon,
   RefreshCwIcon,
-  Rows3Icon,
   ShieldCheckIcon,
   StoreIcon
 } from "lucide-react";
@@ -54,6 +54,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import type { AppListSnapshot, AppSummary, CountryPrice, ProductComparison, Snapshot, TargetSnapshot } from "@/types";
 
@@ -198,9 +199,12 @@ export default function App() {
               <span>App Store Price Monitor</span>
             </div>
             <div className="flex flex-col gap-1">
-              <h1 className="truncate text-2xl font-semibold tracking-normal sm:text-3xl">
-                {selectedTarget?.name || selectedApp?.name || "Monitored Apps"}
-              </h1>
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <h1 className="min-w-0 truncate text-2xl font-semibold tracking-normal sm:text-3xl">
+                  {selectedTarget?.name || selectedApp?.name || "Monitored Apps"}
+                </h1>
+                {appList && showingAppList ? <AppCountBadge count={appList.apps.length} /> : null}
+              </div>
               <p className="text-sm text-muted-foreground">
                 {selectedTargetMeta && selectedTarget
                   ? `${formatDateTime(selectedTargetMeta.generatedAt)} · ${selectedTargetMeta.baseCurrency} base`
@@ -211,7 +215,7 @@ export default function App() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {appList ? <Badge variant="outline">{appList.apps.length} apps</Badge> : null}
+            <ThemeToggle />
           </div>
         </header>
 
@@ -247,6 +251,7 @@ export default function App() {
             generatedAt={selectedTargetMeta?.generatedAt || appList.generatedAt}
             baseCurrency={selectedTargetMeta?.baseCurrency || appList.baseCurrency}
             exchangeUpdatedAt={selectedTargetMeta?.exchangeUpdatedAt || null}
+            storeCountry={selectedApp?.country || null}
             refreshing={refreshingTarget === selectedTarget.appId}
             onBack={openAppList}
             onRefreshTarget={(appId) => refreshTarget(appId, true)}
@@ -254,6 +259,15 @@ export default function App() {
         ) : null}
       </div>
     </main>
+  );
+}
+
+function AppCountBadge({ count }: { count: number }) {
+  return (
+    <Badge className="h-7 gap-1.5 rounded-full px-3 text-sm font-semibold" variant="default">
+      <StoreIcon data-icon="inline-start" />
+      {count} apps
+    </Badge>
   );
 }
 
@@ -283,7 +297,6 @@ function SummaryGrid({ appList }: { appList: AppListSnapshot }) {
   return (
     <Card size="sm" className="rounded-lg bg-muted/20 [--card-spacing:--spacing(2)]">
       <CardContent className="flex flex-wrap items-center gap-x-5 gap-y-2">
-        <MetricItem icon={StoreIcon} label="Apps" value={String(appList.apps.length)} />
         <MetricItem icon={BadgeDollarSignIcon} label="Base" value={appList.baseCurrency} />
         <MetricItem icon={ActivityIcon} label="App info" value={formatDate(appList.generatedAt)} />
         <MetricItem icon={GaugeIcon} label="Pricing" value="Per app" />
@@ -410,6 +423,7 @@ function AppDirectoryCard({
             </TooltipTrigger>
             <TooltipContent>Refresh this app</TooltipContent>
           </Tooltip>
+          <AppStoreButton appId={app.appId} appName={app.name} country={app.country} compact />
           <ChevronRightIcon className="size-4 text-muted-foreground" />
         </CardAction>
       </CardHeader>
@@ -434,11 +448,69 @@ function AppDirectoryCard({
   );
 }
 
+function AppStoreButton({
+  appId,
+  appName,
+  country,
+  compact = false
+}: {
+  appId: string;
+  appName: string;
+  country?: string | null;
+  compact?: boolean;
+}) {
+  const appStoreUrl = getAppStoreUrl(appId, country, appName);
+  if (!appStoreUrl) {
+    return null;
+  }
+
+  const label = `Open ${appName} in App Store`;
+
+  if (compact) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button asChild size="icon-sm" variant="outline">
+            <a
+              aria-label={label}
+              href={appStoreUrl}
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => event.stopPropagation()}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <ExternalLinkIcon data-icon="inline-start" />
+            </a>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Open in App Store</TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Button asChild size="sm" variant="outline">
+      <a
+        aria-label={label}
+        href={appStoreUrl}
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <ExternalLinkIcon data-icon="inline-start" />
+        App Store
+      </a>
+    </Button>
+  );
+}
+
 function AppDetailPage({
   target,
   generatedAt,
   baseCurrency,
   exchangeUpdatedAt,
+  storeCountry,
   refreshing,
   onBack,
   onRefreshTarget
@@ -447,6 +519,7 @@ function AppDetailPage({
   generatedAt: string;
   baseCurrency: string;
   exchangeUpdatedAt: string | null;
+  storeCountry: string | null;
   refreshing: boolean;
   onBack: () => void;
   onRefreshTarget: (appId: string) => void;
@@ -467,6 +540,7 @@ function AppDetailPage({
       <TargetPanel
         target={target}
         baseCurrency={baseCurrency}
+        storeCountry={storeCountry}
         refreshing={refreshing}
         onRefresh={() => onRefreshTarget(target.appId)}
       />
@@ -483,6 +557,8 @@ function AppDetailLoading({
   refreshing: boolean;
   onBack: () => void;
 }) {
+  const appStoreUrl = getAppStoreUrl(app.appId, app.country, app.name);
+
   return (
     <section className="flex flex-col gap-5">
       <Button onClick={onBack} variant="ghost" className="w-fit">
@@ -501,7 +577,10 @@ function AppDetailLoading({
               <CardDescription className="line-clamp-2 max-w-3xl">{app.description || `App ID ${app.appId}`}</CardDescription>
             </div>
           </div>
-          <CardAction>
+          <CardAction className="flex items-center gap-2">
+            {appStoreUrl ? (
+              <AppStoreButton appId={app.appId} appName={app.name} country={app.country} />
+            ) : null}
             <Badge variant="secondary">{refreshing ? "Loading prices" : "Pricing on demand"}</Badge>
           </CardAction>
         </CardHeader>
@@ -557,11 +636,13 @@ function AppDetailError({
 function TargetPanel({
   target,
   baseCurrency,
+  storeCountry,
   refreshing,
   onRefresh
 }: {
   target: TargetSnapshot;
   baseCurrency: string;
+  storeCountry: string | null;
   refreshing: boolean;
   onRefresh: () => void;
 }) {
@@ -589,6 +670,7 @@ function TargetPanel({
           </div>
           <CardAction className="flex items-center gap-2">
             <Badge variant="secondary">{formatOfferCount(offers.length)}</Badge>
+            <AppStoreButton appId={target.appId} appName={target.name} country={storeCountry} />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button disabled={refreshing} onClick={onRefresh} size="sm" variant="outline">
@@ -636,30 +718,13 @@ function OfferExplorer({ offers, baseCurrency }: { offers: ProductComparison[]; 
   }
 
   return (
-    <section className="flex flex-col gap-4">
-      <Card className="rounded-lg">
-        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex min-w-0 flex-col gap-1">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Rows3Icon className="size-4" />
-              <span>Offer</span>
-              <Badge variant="outline">{formatOfferCount(offers.length)}</Badge>
-            </CardTitle>
-            <CardDescription>Choose a subscription or in-app purchase, then compare country / region prices below.</CardDescription>
-          </div>
-          <div className="w-full sm:w-[420px]">
-            <OfferSelect
-              activeOfferKey={activeOffer.key}
-              baseCurrency={baseCurrency}
-              offerGroups={offerGroups}
-              onChange={setActiveOfferKey}
-            />
-          </div>
-        </CardHeader>
-      </Card>
-
-      <OfferCard offer={activeOffer} baseCurrency={baseCurrency} />
-    </section>
+    <OfferCard
+      activeOfferKey={activeOffer.key}
+      baseCurrency={baseCurrency}
+      offer={activeOffer}
+      offerGroups={offerGroups}
+      onOfferChange={setActiveOfferKey}
+    />
   );
 }
 
@@ -698,34 +763,58 @@ function OfferSelect({
   );
 }
 
-function OfferCard({ offer, baseCurrency }: { offer: ProductComparison; baseCurrency: string }) {
+function OfferCard({
+  activeOfferKey,
+  baseCurrency,
+  offer,
+  offerGroups,
+  onOfferChange
+}: {
+  activeOfferKey: string;
+  baseCurrency: string;
+  offer: ProductComparison;
+  offerGroups: Array<{ kind: string; offers: ProductComparison[] }>;
+  onOfferChange: (key: string) => void;
+}) {
   const cheapestPrice = findCheapestPrice(offer.prices);
   const highestPrice = findHighestPrice(offer.prices);
+  const savingsPercent = formatSavingsPercent(offer.stats);
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2">
-          <span>{offer.name}</span>
-          <Badge variant="outline">{formatOfferKind(offer)}</Badge>
-        </CardTitle>
-        <CardAction>
-          <Badge variant="secondary">Lowest first</Badge>
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-1">
+          <CardTitle className="flex flex-wrap items-center gap-2">
+            <span>{offer.name}</span>
+            <Badge variant="outline">{formatOfferKind(offer)}</Badge>
+          </CardTitle>
+          <CardDescription>Compare country / region prices for the selected plan.</CardDescription>
+        </div>
+        <CardAction className="w-full sm:w-[420px]">
+          <OfferSelect
+            activeOfferKey={activeOfferKey}
+            baseCurrency={baseCurrency}
+            offerGroups={offerGroups}
+            onChange={onOfferChange}
+          />
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,2fr)]">
-          <div className="flex min-h-36 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground">
-            <div className="flex items-center gap-2 text-sm">
-              <ArrowDownIcon className="size-4" />
-              <span>Lowest converted price</span>
+          <div className="flex min-h-40 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground">
+            <div className="flex items-center justify-between gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <ArrowDownIcon className="size-4" />
+                <span>Lowest converted price</span>
+              </div>
+              {savingsPercent ? <Badge variant="secondary">Save {savingsPercent}</Badge> : null}
             </div>
             <div className="flex flex-col gap-1">
               <div className="truncate text-3xl font-semibold tracking-normal">
                 {formatMoney(offer.stats?.min, baseCurrency)}
               </div>
-              <div className="text-sm text-primary-foreground/80">
-                Cheapest market: {formatCountryLabel(cheapestPrice)}
+              <div className="flex flex-col gap-0.5 text-sm text-primary-foreground/80">
+                <span>Cheapest market: {formatCountryLabel(cheapestPrice)}</span>
               </div>
             </div>
           </div>
@@ -774,10 +863,7 @@ function OfferCard({ offer, baseCurrency }: { offer: ProductComparison; baseCurr
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span>{price.localPrice || "-"}</span>
-                      {price.currency ? <Badge variant="outline">{price.currency}</Badge> : null}
-                    </div>
+                    <LocalPriceValue price={price} />
                   </TableCell>
                   <TableCell className="text-right font-medium">
                     {formatMoney(price.priceInBase, baseCurrency)}
@@ -792,6 +878,21 @@ function OfferCard({ offer, baseCurrency }: { offer: ProductComparison; baseCurr
   );
 }
 
+function LocalPriceValue({ price }: { price: CountryPrice }) {
+  const { amount, marker } = splitLocalPrice(price.localPrice);
+
+  return (
+    <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+      {marker ? (
+        <Badge variant="default" className="font-mono tracking-normal">
+          {marker}
+        </Badge>
+      ) : null}
+      <span className="font-medium tracking-normal">{amount}</span>
+    </div>
+  );
+}
+
 function RegionFlag({ country }: { country: string | null | undefined }) {
   const flag = formatRegionFlag(country);
   if (!flag) {
@@ -801,7 +902,7 @@ function RegionFlag({ country }: { country: string | null | undefined }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-flex size-5 shrink-0 items-center justify-center rounded-sm border bg-muted/30"
+      className="inline-flex h-6 min-w-7 shrink-0 items-center justify-center text-xl leading-none"
       title={`Storefront region ${country?.toUpperCase()}`}
     >
       {flag}
@@ -959,6 +1060,82 @@ function formatMoney(value: number | null | undefined, currency: string) {
     return "-";
   }
   return `${value.toFixed(2)} ${currency}`;
+}
+
+function getAppStoreUrl(appId: string, country?: string | null, appName?: string | null) {
+  if (!/^\d+$/.test(appId)) {
+    return null;
+  }
+
+  const appPath = formatAppStorePath(appId, appName);
+  const storefront = country?.trim().toLowerCase();
+  if (storefront && /^[a-z]{2}$/.test(storefront)) {
+    return `https://apps.apple.com/${storefront}/app/${appPath}`;
+  }
+
+  return `https://apps.apple.com/app/${appPath}`;
+}
+
+function formatAppStorePath(appId: string, appName?: string | null) {
+  const slug = formatAppStoreSlug(appName);
+  return slug ? `${slug}/id${appId}` : `id${appId}`;
+}
+
+function formatAppStoreSlug(appName?: string | null) {
+  const slug = appName
+    ?.trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
+    .replace(/&/g, " and ")
+    .replace(/['’]/g, "")
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+
+  return slug ? encodeURIComponent(slug) : null;
+}
+
+function splitLocalPrice(localPrice: string | null | undefined) {
+  const value = localPrice?.trim().replace(/\s+/g, " ");
+  if (!value) {
+    return { amount: "-", marker: null };
+  }
+
+  const leadingMarker = value.match(/^([^\p{N}+.,-]+)\s*(.+)$/u);
+  if (leadingMarker) {
+    return {
+      amount: leadingMarker[2].trim(),
+      marker: leadingMarker[1].trim()
+    };
+  }
+
+  const trailingMarker = value.match(/^(.+?)\s*([^\p{N}+.,-]+)$/u);
+  if (trailingMarker) {
+    return {
+      amount: trailingMarker[1].trim(),
+      marker: trailingMarker[2].trim()
+    };
+  }
+
+  return { amount: value, marker: null };
+}
+
+function formatSavingsPercent(stats: ProductComparison["stats"]) {
+  const min = stats?.min;
+  const max = stats?.max;
+  if (
+    typeof min !== "number" ||
+    typeof max !== "number" ||
+    !Number.isFinite(min) ||
+    !Number.isFinite(max) ||
+    max <= 0 ||
+    max <= min
+  ) {
+    return null;
+  }
+
+  return `${(((max - min) / max) * 100).toFixed(1)}%`;
 }
 
 function formatOfferCount(count: number) {
