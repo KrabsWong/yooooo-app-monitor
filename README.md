@@ -23,7 +23,7 @@ The web dashboard is built with React, Vite, Tailwind CSS, shadcn/ui, and lucide
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js 22 or newer
 - pnpm 11.x
 
 ## Install
@@ -48,6 +48,29 @@ The app list is available at `/apps`. Opening `/apps/:appId` loads that app's cu
 pnpm build
 pnpm serve
 ```
+
+## Deploy To Cloudflare
+
+The Cloudflare version runs as a Worker with Static Assets for the Vite build and Workers KV for daily successful-response caching.
+
+```bash
+pnpm install
+pnpm build
+pnpm exec wrangler login
+pnpm exec wrangler kv namespace create APP_MONITOR_CACHE
+```
+
+Copy the returned namespace `id` into `wrangler.jsonc`, then deploy:
+
+```bash
+pnpm deploy:cloudflare
+```
+
+The Worker serves the same routes as local development:
+
+- `/apps` and `/apps/:appId` are served from `dist`.
+- `/api/apps` and `/api/snapshot` run on the Worker.
+- `APP_MONITOR_CACHE` stores daily cached app lists and per-app snapshots.
 
 ## CLI Collection
 

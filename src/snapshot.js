@@ -1,18 +1,18 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { collectTargetSnapshot } from "./appstore.js";
 import { collectAppStorePriceTargetSnapshot, usesAppStorePriceSource } from "./appstoreprice.js";
 import { fetchExchangeRates } from "./exchange.js";
 
 export async function collectSnapshot({
-  configPath = "config/monitors.example.json",
+  config,
   baseCurrency,
   countryOverride,
   concurrency,
   targetAppId
 } = {}) {
-  const resolvedConfigPath = resolve(configPath);
-  const config = JSON.parse(await readFile(resolvedConfigPath, "utf8"));
+  if (!config) {
+    throw new Error("collectSnapshot requires a parsed monitor config");
+  }
+
   const normalizedBaseCurrency = (baseCurrency || config.baseCurrency || "CNY").toUpperCase();
   const normalizedConcurrency = Number(concurrency || config.concurrency || 4);
   const exchange = await fetchExchangeRates(normalizedBaseCurrency);

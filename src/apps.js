@@ -1,11 +1,11 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { lookupApp } from "./appstore.js";
 import { collectAppStorePriceSummary, usesAppStorePriceSource } from "./appstoreprice.js";
 
-export async function collectAppList({ configPath = "config/monitors.example.json", country = "US", concurrency } = {}) {
-  const resolvedConfigPath = resolve(configPath);
-  const config = JSON.parse(await readFile(resolvedConfigPath, "utf8"));
+export async function collectAppList({ config, country = "US", concurrency } = {}) {
+  if (!config) {
+    throw new Error("collectAppList requires a parsed monitor config");
+  }
+
   const targets = config.targets || [];
   const normalizedConcurrency = Number(concurrency || config.concurrency || 4);
   const normalizedCountry = String(country || "US").toUpperCase();

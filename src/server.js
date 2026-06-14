@@ -6,6 +6,7 @@ import { extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { collectAppList } from "./apps.js";
 import { readOrCreateDailyCache } from "./cache.js";
+import { readMonitorConfig } from "./node-config.js";
 import { collectSnapshot } from "./snapshot.js";
 
 const MIME_TYPES = {
@@ -108,9 +109,9 @@ async function handleApiRequest(request, response, { configPath, cacheDir, activ
         },
         sourceFiles: [configPath],
         refresh,
-        create: () =>
+        create: async () =>
           collectAppList({
-            configPath,
+            config: await readMonitorConfig(configPath),
             country,
             concurrency
           })
@@ -145,9 +146,9 @@ async function handleApiRequest(request, response, { configPath, cacheDir, activ
       },
       sourceFiles: [configPath],
       refresh,
-      create: () =>
+      create: async () =>
         collectSnapshot({
-          configPath,
+          config: await readMonitorConfig(configPath),
           baseCurrency,
           countryOverride,
           concurrency,

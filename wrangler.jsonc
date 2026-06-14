@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "yooooo-app-monitor",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-14",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "APP_MONITOR_CACHE",
+      "id": "f048db6c99904613958c26c87bfdc348"
+    }
+  ],
+  "vars": {
+    "APP_MONITOR_CACHE_TIME_ZONE": "Asia/Shanghai"
+  }
+}

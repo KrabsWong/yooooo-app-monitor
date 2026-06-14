@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { readMonitorConfig } from "./node-config.js";
 import { buildMarkdownReport } from "./report.js";
 import { collectSnapshot } from "./snapshot.js";
 
@@ -9,8 +10,9 @@ async function main() {
   const configPath = resolve(args.config || "config/monitors.example.json");
   const outPrefix = resolve(args.out || "outputs/appstore-prices");
   const countryOverride = args.countries ? args.countries.split(",").map((item) => item.trim()).filter(Boolean) : null;
+  const config = await readMonitorConfig(configPath);
   const snapshot = await collectSnapshot({
-    configPath,
+    config,
     baseCurrency: args.baseCurrency,
     countryOverride,
     concurrency: args.concurrency

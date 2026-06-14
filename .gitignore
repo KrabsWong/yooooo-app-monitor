@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Build outputs
 dist/
@@ -7,6 +8,7 @@ dist/
 
 # Runtime output and local cache
 .cache/
+.wrangler/
 outputs/
 
 # Environment
