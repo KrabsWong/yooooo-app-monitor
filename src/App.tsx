@@ -790,7 +790,9 @@ function OfferCard({
 }) {
   const cheapestPrice = findCheapestPrice(offer.prices);
   const highestPrice = findHighestPrice(offer.prices);
+  const usPrice = findCountryPrice(offer.prices, "US");
   const savingsPercent = formatSavingsPercent(offer.stats);
+  const usSavingsPercent = formatSavingsPercentAgainst(usPrice?.priceInBase, cheapestPrice?.priceInBase);
 
   return (
     <Card className="[--card-spacing:--spacing(3)] sm:[--card-spacing:--spacing(4)]">
@@ -815,15 +817,22 @@ function OfferCard({
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,2fr)]">
           <div className="flex min-h-36 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground sm:min-h-40">
             <div className="flex items-center justify-between gap-3 text-sm">
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 items-center gap-2">
                 <ArrowDownIcon className="size-4" />
                 <span>Lowest converted price</span>
               </div>
-              {savingsPercent ? (
-                <Badge className="bg-price-low text-price-low-foreground" variant="default">
-                  Save {savingsPercent}
-                </Badge>
-              ) : null}
+              <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+                {savingsPercent ? (
+                  <Badge className="bg-price-low text-price-low-foreground" variant="default">
+                    Save {savingsPercent}
+                  </Badge>
+                ) : null}
+                {usSavingsPercent ? (
+                  <Badge className="bg-price-low text-price-low-foreground" variant="default">
+                    Save {usSavingsPercent} vs US
+                  </Badge>
+                ) : null}
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <div className="truncate text-3xl font-semibold tracking-normal">
@@ -994,6 +1003,15 @@ function findHighestPrice(prices: CountryPrice[]) {
   return null;
 }
 
+function findCountryPrice(prices: CountryPrice[], country: string) {
+  const targetCountry = country.trim().toUpperCase();
+  return (
+    prices.find(
+      (price) => price.country?.trim().toUpperCase() === targetCountry && Number.isFinite(price.priceInBase)
+    ) || null
+  );
+}
+
 function formatCountryLabel(price: CountryPrice | null) {
   if (!price) {
     return "-";
@@ -1159,20 +1177,22 @@ function splitLocalPrice(localPrice: string | null | undefined) {
 }
 
 function formatSavingsPercent(stats: ProductComparison["stats"]) {
-  const min = stats?.min;
-  const max = stats?.max;
+  return formatSavingsPercentAgainst(stats?.max, stats?.min);
+}
+
+function formatSavingsPercentAgainst(referencePrice: number | null | undefined, lowerPrice: number | null | undefined) {
   if (
-    typeof min !== "number" ||
-    typeof max !== "number" ||
-    !Number.isFinite(min) ||
-    !Number.isFinite(max) ||
-    max <= 0 ||
-    max <= min
+    typeof referencePrice !== "number" ||
+    typeof lowerPrice !== "number" ||
+    !Number.isFinite(referencePrice) ||
+    !Number.isFinite(lowerPrice) ||
+    referencePrice <= 0 ||
+    referencePrice <= lowerPrice
   ) {
     return null;
   }
 
-  return `${(((max - min) / max) * 100).toFixed(1)}%`;
+  return `${(((referencePrice - lowerPrice) / referencePrice) * 100).toFixed(1)}%`;
 }
 
 function formatOfferCount(count: number) {
