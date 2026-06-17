@@ -3,7 +3,7 @@ import { collectAppList } from "./apps.js";
 import { readOrCreateDailyKvCache } from "./edge-cache.js";
 import { collectSnapshot } from "./snapshot.js";
 
-const CACHE_SCHEMA_VERSION = "2026-06-14-plan-parser-v3";
+const CACHE_SCHEMA_VERSION = "2026-06-17-description-token-filter-v1";
 const activeAppLists = new Map();
 const activeSnapshots = new Map();
 

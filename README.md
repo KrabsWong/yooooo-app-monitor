@@ -65,6 +65,17 @@ Copy the returned namespace `id` into `wrangler.jsonc`, then deploy:
 pnpm deploy:cloudflare
 ```
 
+### Automatic Deployment From GitHub
+
+Merges to `main` trigger `.github/workflows/deploy-cloudflare.yml`. The workflow installs dependencies, runs tests, builds the Vite app, and deploys the Worker with Wrangler.
+
+Add these repository secrets in GitHub before merging deployment changes:
+
+- `CLOUDFLARE_ACCOUNT_ID`: the Cloudflare account that owns the Worker.
+- `CLOUDFLARE_API_TOKEN`: an API token scoped to deploy Workers for that account.
+
+The API token should not be committed to the repository. In Cloudflare, create it from Account API Tokens with the Workers edit permission and scope it to the smallest account/resource set possible.
+
 The Worker serves the same routes as local development:
 
 - `/apps` and `/apps/:appId` are served from `dist`.

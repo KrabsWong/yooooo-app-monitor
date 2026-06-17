@@ -16,7 +16,7 @@ export async function collectAppStorePriceSummary({ target }) {
     platform: target.platform || "ios",
     appId: target.appId,
     iconUrl: target.iconUrl || app.iconUrl || null,
-    description: normalizeDescription(target.description) || normalizeDescription(app.description),
+    description: normalizeDescription(target.description) || normalizeAppDescription(app.description),
     artistName: app.developer || null,
     primaryGenreName: app.category || null,
     country: "appstoreprice",
@@ -79,7 +79,7 @@ export async function collectAppStorePriceTargetSnapshot({ target, exchange, cou
     platform: target.platform || "ios",
     appId: target.appId,
     iconUrl: target.iconUrl || app.iconUrl || null,
-    description: normalizeDescription(target.description) || normalizeDescription(app.description),
+    description: normalizeDescription(target.description) || normalizeAppDescription(app.description),
     requestedCountryCount,
     filteredCountryCount: Math.max(0, requestedCountryCount - countries.length),
     countries
@@ -221,4 +221,13 @@ function normalizeDescription(description) {
   }
 
   return description.replace(/\s+/g, " ").trim() || null;
+}
+
+function normalizeAppDescription(description) {
+  const normalized = normalizeDescription(description);
+  if (!normalized) {
+    return null;
+  }
+
+  return /^\$[0-9a-z]+$/i.test(normalized) ? null : normalized;
 }
