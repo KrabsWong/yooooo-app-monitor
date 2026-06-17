@@ -843,18 +843,12 @@ function OfferCard({
               </div>
             </div>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2">
             <StatBlock
               icon={GaugeIcon}
               label="Median"
               value={formatMoney(offer.stats?.median, baseCurrency)}
               detail={`Spread ${formatMoney(offer.stats?.spread, baseCurrency)}`}
-            />
-            <StatBlock
-              icon={ActivityIcon}
-              label="Average"
-              value={formatMoney(offer.stats?.average, baseCurrency)}
-              detail="Converted average"
             />
             <StatBlock
               icon={ArrowUpIcon}
