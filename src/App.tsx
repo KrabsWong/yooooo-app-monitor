@@ -843,7 +843,7 @@ function OfferCard({
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid gap-2 sm:grid-cols-3">
             <StatBlock
               icon={GaugeIcon}
               label="Median"
@@ -977,14 +977,14 @@ function StatBlock({
   detail: string;
 }) {
   return (
-    <div className="flex min-h-24 flex-col justify-between rounded-lg border bg-muted/30 p-2 sm:min-h-32 sm:p-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Icon className="size-3" />
+    <div className="flex min-h-24 min-w-0 flex-col justify-between gap-3 rounded-lg border bg-muted/30 p-3 sm:min-h-32">
+      <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+        <Icon className="size-3 shrink-0" />
         <span>{label}</span>
       </div>
-      <div className="flex flex-col gap-1">
-        <div className="truncate text-sm font-semibold tracking-normal sm:text-lg">{value}</div>
-        <div className="truncate text-xs text-muted-foreground">{detail}</div>
+      <div className="flex min-w-0 flex-col gap-1">
+        <div className="break-words text-base font-semibold leading-snug tracking-normal sm:text-lg">{value}</div>
+        <div className="break-words text-xs leading-snug text-muted-foreground">{detail}</div>
       </div>
     </div>
   );
