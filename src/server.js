@@ -16,7 +16,7 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml"
 };
-const CACHE_SCHEMA_VERSION = "2026-06-17-description-token-filter-v1";
+const CACHE_SCHEMA_VERSION = "2026-06-24-fallback-coverage-v1";
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));

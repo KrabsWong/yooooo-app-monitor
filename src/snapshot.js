@@ -67,8 +67,29 @@ async function collectAppStorePriceFallback({ target, exchange, countryOverride,
       countryOverride
     });
 
-    return fallbackSnapshot.subscriptionPlans.length ? fallbackSnapshot : currentSnapshot;
+    return shouldUseAppStorePriceFallback({
+      currentSnapshot,
+      fallbackSnapshot,
+      countryOverride
+    })
+      ? fallbackSnapshot
+      : currentSnapshot;
   } catch {
     return currentSnapshot;
   }
+}
+
+export function shouldUseAppStorePriceFallback({ currentSnapshot, fallbackSnapshot, countryOverride }) {
+  if (!fallbackSnapshot.subscriptionPlans.length) {
+    return false;
+  }
+
+  const explicitCountryFilter = Boolean(countryOverride?.length);
+  const requestedAllCountries = !explicitCountryFilter && currentSnapshot.requestedCountryCount > 1;
+
+  if (requestedAllCountries && fallbackSnapshot.countryCount <= 1) {
+    return false;
+  }
+
+  return true;
 }
